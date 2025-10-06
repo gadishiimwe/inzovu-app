@@ -22,14 +22,14 @@ export default function Checkout() {
       .map((item: any) => `- ${item.qty}x ${item.product.name}`)
       .join("\n");
     
-    const codes = paymentMethod === "momo" ? "(Use codes 07772 or 07779)" : "";
+    const codes = paymentMethod === "momo" ? "(Use codes 07772 or 07773)" : "";
     const paymentInfo = paymentMethod === "momo" 
       ? `I will pay via MTN MoMo ${codes}. My number: ${phone || "[Your Phone]"}`
       : "I will pay Cash on Delivery";
     
     const message = `Hello, I am [Full Name]. I have ordered ${cart.map((i:any)=>i.product.name).join(", ")}.\n\nOrder Details:\n${items}\n\nTotal: ${Math.round(total).toLocaleString()} RWF\n\n${paymentInfo}.`;
     
-    const whatsappUrl = `https://wa.me/250788123456?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/250788654321?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
   };
 

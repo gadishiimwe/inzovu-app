@@ -1,33 +1,100 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Users, Package, TrendingUp, DollarSign, AlertTriangle, Activity, Eye, Clock, CheckCircle, XCircle } from "lucide-react";
+import { ShoppingCart, Users, Package, TrendingUp, DollarSign, AlertTriangle, Activity, Eye, Clock, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import { useProducts } from "@/contexts/ProductContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface DashboardPageProps {
   orders: any[];
 }
 
+interface DashboardStats {
+  totalProducts: number;
+  availableProducts: number;
+  totalOrders: number;
+  totalRevenue: number;
+  pendingOrders: number;
+  completedOrders: number;
+  totalCustomers: number;
+}
+
 export default function DashboardPage({ orders }: DashboardPageProps) {
   const { products } = useProducts();
+  const { toast } = useToast();
+  const [stats, setStats] = useState<DashboardStats>({
+    totalProducts: 0,
+    availableProducts: 0,
+    totalOrders: 0,
+    totalRevenue: 0,
+    pendingOrders: 0,
+    completedOrders: 0,
+    totalCustomers: 0,
+  });
+  const [loading, setLoading] = useState(true);
+  const [recentOrders, setRecentOrders] = useState<any[]>([]);
 
-  // Calculate metrics
-  const totalProducts = products.length;
-  const availableProducts = products.filter(p => p.available !== false).length;
-  const totalOrders = orders.length;
-  const deliveredOrders = orders.filter(o => o.status === "Delivered").length;
-  const totalRevenue = orders
-    .filter(o => o.status === "Delivered")
-    .reduce((sum, order) => sum + parseFloat(order.stockValue.replace(/[K,]/g, '')), 0) * 1000;
+  useEffect(() => {
+    fetchDashboardStats();
+  }, []);
 
-  const recentOrders = orders.slice(0, 5);
+  const fetchDashboardStats = async () => {
+    try {
+      setLoading(true);
 
-  const stats = [
+      // Fetch orders
+      const { data: ordersData, error: ordersError } = await supabase
+        .from("orders")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (ordersError) throw ordersError;
+
+      // Fetch customers count
+      const { count: customersCount, error: customersError } = await supabase
+        .from("profiles")
+        .select("*", { count: "exact", head: true });
+
+      if (customersError) throw customersError;
+
+      // Calculate stats
+      const totalProducts = products.length;
+      const availableProducts = products.filter(p => p.available !== false).length;
+      const totalOrders = ordersData?.length || 0;
+      const totalRevenue = ordersData?.reduce((sum, order) => sum + (order.total || 0), 0) || 0;
+      const pendingOrders = ordersData?.filter(order => order.status === 'pending').length || 0;
+      const completedOrders = ordersData?.filter(order => ['delivered', 'shipped'].includes(order.status)).length || 0;
+
+      setStats({
+        totalProducts,
+        availableProducts,
+        totalOrders,
+        totalRevenue,
+        pendingOrders,
+        completedOrders,
+        totalCustomers: customersCount || 0,
+      });
+
+      setRecentOrders(ordersData?.slice(0, 5) || []);
+    } catch (error) {
+      console.error("Error fetching dashboard stats:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load dashboard data",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const statsCards = [
     {
       title: "Total Products",
-      value: totalProducts,
-      subtitle: `${availableProducts} available`,
+      value: stats.totalProducts,
+      subtitle: `${stats.availableProducts} available`,
       icon: Package,
       gradient: "from-blue-500 to-blue-600",
       bgGradient: "from-blue-50 to-blue-100",
@@ -35,8 +102,8 @@ export default function DashboardPage({ orders }: DashboardPageProps) {
     },
     {
       title: "Total Orders",
-      value: totalOrders,
-      subtitle: `${deliveredOrders} delivered`,
+      value: stats.totalOrders,
+      subtitle: `${stats.completedOrders} completed`,
       icon: ShoppingCart,
       gradient: "from-green-500 to-green-600",
       bgGradient: "from-green-50 to-green-100",
@@ -44,8 +111,8 @@ export default function DashboardPage({ orders }: DashboardPageProps) {
     },
     {
       title: "Revenue",
-      value: `RWF ${totalRevenue.toLocaleString()}`,
-      subtitle: "+12% from last month",
+      value: `RWF ${stats.totalRevenue.toLocaleString()}`,
+      subtitle: `${stats.pendingOrders} pending`,
       icon: DollarSign,
       gradient: "from-purple-500 to-purple-600",
       bgGradient: "from-purple-50 to-purple-100",
@@ -53,8 +120,8 @@ export default function DashboardPage({ orders }: DashboardPageProps) {
     },
     {
       title: "Customers",
-      value: "1,234",
-      subtitle: "+8% from last month",
+      value: stats.totalCustomers,
+      subtitle: "Registered users",
       icon: Users,
       gradient: "from-orange-500 to-orange-600",
       bgGradient: "from-orange-50 to-orange-100",
@@ -80,7 +147,7 @@ export default function DashboardPage({ orders }: DashboardPageProps) {
 
       {/* Metrics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat, index) => (
+        {statsCards.map((stat, index) => (
           <Card key={stat.title} className={`relative overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105 animate-in slide-in-from-bottom-${index + 1} delay-${index * 100}`}>
             {/* Background gradient */}
             <div className={`absolute inset-0 bg-gradient-to-br ${stat.bgGradient} opacity-50`}></div>

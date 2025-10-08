@@ -55,7 +55,7 @@ export default function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <div className="group relative rounded-lg border border-green-400 hover:shadow-lg transition-all duration-300 overflow-hidden max-w-[180px] mx-auto p-3 flex flex-col max-h-[320px]">
+    <div className="group relative rounded-lg border border-green-400 hover:shadow-lg transition-all duration-300 overflow-hidden max-w-[180px] mx-auto p-2 flex flex-col max-h-[280px]">
       {/* Badges */}
       <div className="absolute top-2 left-2 z-10 flex gap-1">
         <span className="bg-green-600 text-white text-xs font-semibold px-2 py-0.5 rounded-full shadow-md">
@@ -80,63 +80,61 @@ export default function ProductCard({ product }: { product: Product }) {
 
       {/* Image */}
       <Link to={`/product/${product.id}${location.pathname.startsWith('/category/') ? `?from=${encodeURIComponent(location.pathname)}` : ''}`} aria-label={`${product.name} details`}>
-        <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800 rounded-md">
+        <div className="relative w-full h-32 overflow-hidden rounded-md bg-gray-50">
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
           />
 
-          <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md"></div>
 
           {/* Rating */}
-          <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-white/95 dark:bg-gray-800/95 px-2 py-0.5 rounded-full shadow-md">
-            <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-            <span className="text-xs font-semibold text-gray-800 dark:text-gray-200">{fixedRating}</span>
+          <div className="absolute bottom-1.5 left-1.5 flex items-center gap-1 bg-white/95 px-1.5 py-0.5 rounded-full shadow-sm">
+            <Star className="h-2.5 w-2.5 fill-yellow-400 text-yellow-400" />
+            <span className="text-xs font-semibold text-gray-800">{fixedRating}</span>
           </div>
         </div>
       </Link>
 
       {/* Content */}
-      <div className="p-2 sm:p-3 space-y-1">
+      <div className="p-2 space-y-1.5">
         <Link to={`/product/${product.id}${location.pathname.startsWith('/category/') ? `?from=${encodeURIComponent(location.pathname)}` : ''}`}>
-          <h3 className="font-semibold text-xs sm:text-sm mb-0.5 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
+          <h3 className="font-semibold text-sm leading-tight line-clamp-2 group-hover:text-primary transition-colors">
             {product.name}
           </h3>
         </Link>
 
         {/* Price */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-lg font-bold text-primary whitespace-nowrap">
-              RWF {product.price.toLocaleString()}
-            </span>
-            <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-1 rounded-full">
-              per {product.unit || "piece"}
-            </span>
-          </div>
+        <div className="space-y-1">
+          <span className="text-lg font-bold text-primary block">
+            RWF {product.price.toLocaleString()}
+          </span>
+          <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded-full inline-block">
+            per {product.unit || "piece"}
+          </span>
         </div>
 
         {/* Quantity Controls and Add to Cart */}
-        <div className="space-y-1">
-          <div className="flex items-center justify-between gap-1">
-            <div className="flex items-center gap-1">
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-1 bg-gray-50 rounded-full p-1">
               <button
                 onClick={decrementQuantity}
-                className="w-4 h-4 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors duration-300"
+                className="w-5 h-5 rounded-full bg-white hover:bg-gray-100 flex items-center justify-center transition-colors duration-200 shadow-sm"
                 disabled={quantity <= 1}
               >
-                <Minus className="h-2 w-2" />
+                <Minus className="h-2.5 w-2.5" />
               </button>
-              <span className="w-5 text-center font-medium text-xs">
+              <span className="w-6 text-center font-medium text-xs">
                 {quantity}
               </span>
               <button
                 onClick={incrementQuantity}
-                className="w-4 h-4 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors duration-300"
+                className="w-5 h-5 rounded-full bg-white hover:bg-gray-100 flex items-center justify-center transition-colors duration-200 shadow-sm"
               >
-                <Plus className="h-2 w-2" />
+                <Plus className="h-2.5 w-2.5" />
               </button>
             </div>
 
@@ -144,17 +142,15 @@ export default function ProductCard({ product }: { product: Product }) {
             <Button
               onClick={addToCart}
               size="sm"
-              className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white font-semibold rounded-md shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-1 px-2 py-1 text-xs"
+              className="bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-center px-3 py-1.5 h-8"
             >
-              <ShoppingCart className="h-3 w-3" />
-              Add
+              <ShoppingCart className="h-3.5 w-3.5" />
             </Button>
           </div>
-          <div className="mt-1">
-            <ProductQuickView product={product} trigger={(open) => (
-              <button onClick={open} className="text-xs text-primary underline underline-offset-2" aria-label="Quick view">Quick view</button>
-            )} />
-          </div>
+
+          <ProductQuickView product={product} trigger={(open) => (
+            <button onClick={open} className="text-xs text-primary hover:text-primary/80 underline underline-offset-2 transition-colors w-full text-left" aria-label="Quick view">Quick view</button>
+          )} />
         </div>
       </div>
 

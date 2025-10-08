@@ -25,41 +25,49 @@ import GoodStuff from "./pages/GoodStuff";
 import Deals from "./pages/Deals";
 import Account from "./pages/Account";
 import Layout from "./components/layout/Layout";
+import ScrollToTop from "./components/common/ScrollToTop";
 import { ProductProvider } from "./contexts/ProductContext";
+import { SettingsProvider } from "./contexts/SettingsContext";
+import { CategoryProvider } from "./contexts/CategoryContext";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ProductProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Index />} />
-              <Route path="shop" element={<Shop />} />
-              <Route path="category/:slug" element={<Category />} />
-              <Route path="product/:id" element={<Product />} />
-              <Route path="cart" element={<Cart />} />
-              <Route path="checkout" element={<Checkout />} />
-              <Route path="liked" element={<Liked />} />
-              <Route path="about" element={<About />} />
-              <Route path="contact" element={<Contact />} />
-              <Route path="faq" element={<FAQ />} />
-              <Route path="deals" element={<Deals />} />
-              <Route path="new-in" element={<NewIn />} />
-              <Route path="good-stuff" element={<GoodStuff />} />
-              <Route path="account" element={<Account />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
+      <CategoryProvider>
+        <SettingsProvider>
+          <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <ScrollToTop />
+            <Routes>
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/" element={<Layout />}>
+                <Route index element={<Index />} />
+                <Route path="shop" element={<Shop />} />
+                <Route path="category/:slug" element={<Category />} />
+                <Route path="product/:id" element={<Product />} />
+                <Route path="cart" element={<Cart />} />
+                <Route path="checkout" element={<Checkout />} />
+                <Route path="liked" element={<Liked />} />
+                <Route path="about" element={<About />} />
+                <Route path="contact" element={<Contact />} />
+                <Route path="faq" element={<FAQ />} />
+                <Route path="deals" element={<Deals />} />
+                <Route path="new-in" element={<NewIn />} />
+                <Route path="good-stuff" element={<GoodStuff />} />
+                <Route path="account" element={<Account />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
       </TooltipProvider>
+      </SettingsProvider>
+      </CategoryProvider>
     </ProductProvider>
   </QueryClientProvider>
 );

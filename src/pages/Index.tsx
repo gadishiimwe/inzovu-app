@@ -3,8 +3,8 @@ import CustomerTestimonials from "@/components/home/CustomerTestimonials";
 import PromotionalCards from "@/components/home/PromotionalCards";
 import FeaturedProducts from "@/components/home/FeaturedProducts";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
-import { categories } from "@/data/inzovu";
 import { useProducts } from "@/contexts/ProductContext";
+import { useCategories } from "@/contexts/CategoryContext";
 import { Link } from "react-router-dom";
 import {
   Carousel,
@@ -21,6 +21,7 @@ import { Clock, ArrowRight } from "lucide-react";
 
 const Index = () => {
   const { products } = useProducts();
+  const { categories } = useCategories();
   const [timeLeft, setTimeLeft] = useState<number>(0);
 
   useEffect(() => {

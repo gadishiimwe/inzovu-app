@@ -3,9 +3,9 @@ import ProductCard from "@/components/product/ProductCard";
 import { Card, CardContent } from "@/components/ui/card";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
 import { Input } from "@/components/ui/input";
-import { categories } from "@/data/inzovu";
 import { Link, useLocation } from "react-router-dom";
 import { useProducts } from "@/contexts/ProductContext";
+import { useCategories } from "@/contexts/CategoryContext";
 
 function useQuery() {
   const { search } = useLocation();
@@ -14,6 +14,7 @@ function useQuery() {
 
 export default function Shop() {
   const { products } = useProducts();
+  const { categories } = useCategories();
   const q = useQuery().get("q")?.toLowerCase() || "";
   const filtered = q
     ? products.filter((p) => p.name.toLowerCase().includes(q) && p.available !== false)

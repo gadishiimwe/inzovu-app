@@ -1,6 +1,6 @@
 import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
-import { products } from "@/data/inzovu";
+import { useProducts } from "@/contexts/ProductContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +12,7 @@ export default function Product() {
   const { id } = useParams();
   const { search } = useLocation();
   const navigate = useNavigate();
+  const { products } = useProducts();
   const product = products.find((p) => p.id === id);
   const params = new URLSearchParams(search);
   const from = params.get("from");
@@ -407,28 +408,97 @@ export default function Product() {
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">You might also like</h2>
-            <div className="grid md:grid-cols-4 gap-6">
-              {relatedProducts.map((relatedProduct) => (
-                <Card key={relatedProduct.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+          <div className="mb-16">
+            <div className="text-center mb-10">
+              <div className="inline-flex items-center gap-3 mb-4">
+                <div className="h-1 w-12 bg-gradient-to-r from-green-500 to-blue-500 rounded-full"></div>
+                <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+                  You might also like
+                </h2>
+                <div className="h-1 w-12 bg-gradient-to-r from-blue-500 to-green-500 rounded-full"></div>
+              </div>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Discover more fresh, high-quality products from our curated selection
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {relatedProducts.map((relatedProduct, index) => (
+                <Card key={relatedProduct.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-white border-0 rounded-2xl shadow-lg hover:shadow-green-500/10">
                   <CardContent className="p-0">
-                    <Link to={`/product/${relatedProduct.id}`}>
-                      <img
-                        src={relatedProduct.image}
-                        alt={relatedProduct.name}
-                        className="w-full h-48 object-cover"
-                      />
-                      <div className="p-4">
-                        <h3 className="font-semibold mb-2">{relatedProduct.name}</h3>
-                        <p className="text-green-600 font-bold">
-                          RWF {Math.round(relatedProduct.price).toLocaleString()}
-                        </p>
+                    <Link to={`/product/${relatedProduct.id}`} className="block">
+                      <div className="relative overflow-hidden">
+                        <img
+                          src={relatedProduct.image}
+                          alt={relatedProduct.name}
+                          className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                        {/* Sale Badge */}
+                        <div className="absolute top-3 left-3">
+                          <span className="bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded-full shadow-md">
+                            Sale
+                          </span>
+                        </div>
+
+                        {/* Rating */}
+                        <div className="absolute top-3 right-3">
+                          <div className="flex items-center gap-1 bg-white/95 backdrop-blur-sm px-2 py-1 rounded-full shadow-sm">
+                            <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                            <span className="text-xs font-semibold text-gray-800">4.5</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="p-5">
+                        <h3 className="font-bold text-lg mb-2 group-hover:text-green-600 transition-colors line-clamp-2 leading-tight">
+                          {relatedProduct.name}
+                        </h3>
+
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="text-2xl font-bold text-green-600">
+                            RWF {Math.round(relatedProduct.price).toLocaleString()}
+                          </span>
+                          <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                            per {relatedProduct.unit || "unit"}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center justify-center">
+                          <Button
+                            size="sm"
+                            className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-300 group-hover:scale-105"
+                          >
+                            <span className="flex items-center gap-2">
+                              View Details
+                              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </span>
+                          </Button>
+                        </div>
                       </div>
                     </Link>
                   </CardContent>
                 </Card>
               ))}
+            </div>
+
+            {/* View More CTA */}
+            <div className="text-center mt-10">
+              <Link to="/shop">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white rounded-xl px-8 py-3 font-semibold transition-all duration-300 hover:scale-105"
+                >
+                  Explore All Products
+                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </Button>
+              </Link>
             </div>
           </div>
         )}

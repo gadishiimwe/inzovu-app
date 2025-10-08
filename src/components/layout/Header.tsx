@@ -7,13 +7,14 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger as NavTrigger } from "@/components/ui/navigation-menu";
 import MobileMenu from "./MobileMenu";
 import { useState, useEffect } from "react";
-import { categories } from "@/data/inzovu";
+import { useCategories } from "@/contexts/CategoryContext";
 import { supabase } from "@/integrations/supabase/client";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { categories } = useCategories();
   const [cartCount, setCartCount] = useState(0);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [user, setUser] = useState<SupabaseUser | null>(null);

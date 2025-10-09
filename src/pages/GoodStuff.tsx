@@ -1,6 +1,5 @@
 import { useProducts } from "@/contexts/ProductContext";
 import ProductCard from "@/components/product/ProductCard";
-import { Card, CardContent } from "@/components/ui/card";
 
 export default function GoodStuff() {
   const { products } = useProducts();
@@ -23,13 +22,9 @@ export default function GoodStuff() {
           </p>
         </header>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2">
           {goodProducts.map((p) => (
-            <Card key={p.id} className="overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border-0 rounded-2xl">
-              <CardContent className="p-3">
-                <ProductCard product={p} />
-              </CardContent>
-            </Card>
+            <ProductCard key={p.id} product={p} />
           ))}
         </div>
       </div>

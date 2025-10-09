@@ -1,5 +1,4 @@
 import { Link, useLocation } from "react-router-dom";
-import ProductQuickView from "@/components/product/ProductQuickView";
 import { Button } from "@/components/ui/button";
 import { Plus, Minus, ShoppingCart, Heart, Star } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -55,7 +54,7 @@ export default function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <div className="group relative rounded-lg border border-green-400 hover:shadow-lg transition-all duration-300 overflow-hidden max-w-[180px] mx-auto p-2 flex flex-col max-h-[280px]">
+    <div className="group relative rounded-lg border border-green-400 hover:shadow-lg transition-all duration-300 overflow-hidden max-w-[180px] mx-auto p-2 flex flex-col max-h-[250px] bg-white">
       {/* Badges */}
       <div className="absolute top-2 left-2 z-10 flex gap-1">
         <span className="bg-green-600 text-white text-xs font-semibold px-2 py-0.5 rounded-full shadow-md">
@@ -80,7 +79,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
       {/* Image */}
       <Link to={`/product/${product.id}${location.pathname.startsWith('/category/') ? `?from=${encodeURIComponent(location.pathname)}` : ''}`} aria-label={`${product.name} details`}>
-        <div className="relative w-full h-32 overflow-hidden rounded-md bg-gray-50">
+        <div className="relative w-full h-24 overflow-hidden rounded-md bg-gray-50">
           <img
             src={product.image}
             alt={product.name}
@@ -148,9 +147,7 @@ export default function ProductCard({ product }: { product: Product }) {
             </Button>
           </div>
 
-          <ProductQuickView product={product} trigger={(open) => (
-            <button onClick={open} className="text-xs text-primary hover:text-primary/80 underline underline-offset-2 transition-colors w-full text-left" aria-label="Quick view">Quick view</button>
-          )} />
+
         </div>
       </div>
 

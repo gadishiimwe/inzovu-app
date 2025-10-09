@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import type { Product } from '@/data/inzovu';
+import { products as staticProducts } from '@/data/inzovu';
 
 interface ProductContextType {
   products: Product[];
@@ -56,7 +57,12 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
         available: item.available !== false,
       }));
 
-      setProducts(mappedProducts);
+      // If no products in database, use static data as fallback
+      if (mappedProducts.length === 0) {
+        setProducts(staticProducts);
+      } else {
+        setProducts(mappedProducts);
+      }
     } catch (error) {
       console.error('Error fetching products:', error);
       toast({

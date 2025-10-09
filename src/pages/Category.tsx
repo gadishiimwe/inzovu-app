@@ -3,7 +3,6 @@ import ProductCard from "@/components/product/ProductCard";
 import { categories } from "@/data/inzovu";
 import { useProducts } from "@/contexts/ProductContext";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
-import { Card, CardContent } from "@/components/ui/card";
 
 export default function Category() {
   const { products } = useProducts();
@@ -38,13 +37,9 @@ export default function Category() {
           </p>
         </header>
         {/* Responsive grid for all screen sizes */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mt-10">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 mt-10">
           {items.map((p) => (
-            <Card key={p.id} className="overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border-0 rounded-2xl">
-              <CardContent className="p-3">
-                <ProductCard product={p} />
-              </CardContent>
-            </Card>
+            <ProductCard key={p.id} product={p} />
           ))}
         </div>
       </div>

@@ -100,13 +100,9 @@ export default function Deals() {
         </div>
 
         {/* Unified grid without horizontal scroll */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2">
           {dealProducts.map((product) => (
-            <Card key={product.id} className="overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border-0 rounded-2xl">
-              <CardContent className="p-3">
-                <ProductCard product={product} />
-              </CardContent>
-            </Card>
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
 

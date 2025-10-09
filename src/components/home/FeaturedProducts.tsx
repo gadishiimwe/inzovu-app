@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import ProductCard from "@/components/product/ProductCard";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Star } from "lucide-react";
 import {
@@ -35,13 +34,9 @@ export default function FeaturedProducts() {
         </div>
 
         {/* Products Grid - card surround + subtle separators */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 mb-8 sm:mb-12">
           {featuredProducts.map((product) => (
-            <Card key={product.id} className="overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white border-0 rounded-2xl">
-              <CardContent className="p-3">
-                <ProductCard product={product} />
-              </CardContent>
-            </Card>
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
 

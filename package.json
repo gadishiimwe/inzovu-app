@@ -81,5 +81,17 @@
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.38.0",
     "vite": "^5.4.19"
-  }
+  },
+  "description": "**URL**: https://lovable.dev/projects/592b3ba7-a0ec-4c2c-8c41-c3a92edb6f82",
+  "main": "eslint.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rommygd/inzovu-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rommygd/inzovu-app/issues"
+  },
+  "homepage": "https://github.com/rommygd/inzovu-app#readme"
 }

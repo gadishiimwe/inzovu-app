@@ -76,62 +76,73 @@ const Index = () => {
       <Hero />
       <main className="flex-1 bg-gradient-to-br from-yellow-50 to-orange-50">
         {/* Flash Sale Banner */}
-        <div className="bg-gradient-to-r from-red-700 via-red-600 to-red-700 text-white py-6 px-6 sm:px-12 rounded-b-3xl shadow-2xl mb-10 max-w-7xl mx-auto">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 text-center sm:text-left">
-              <span className="text-2xl sm:text-3xl font-extrabold tracking-tight animate-pulse select-none">⚡ Flash Sale is Live! ⚡</span>
-              <span className="text-lg sm:text-xl font-semibold">Limited time offers on fresh products.</span>
+        <div className="bg-gradient-to-r from-red-600 via-red-700 to-red-800 text-white py-12 px-6 sm:px-12 rounded-b-3xl shadow-2xl mb-10 max-w-7xl mx-auto relative overflow-hidden">
+          {/* Animated background pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_50%)] animate-pulse"></div>
+            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-white/5 to-transparent"></div>
+          </div>
+
+          {/* Floating elements */}
+          <div className="absolute top-4 right-8 text-4xl animate-bounce">🔥</div>
+          <div className="absolute bottom-4 left-8 text-3xl animate-pulse">⚡</div>
+
+          <div className="relative flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div className="flex flex-col lg:flex-row items-center gap-6 text-center lg:text-left">
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                <div className="text-4xl mb-2">⏰</div>
+                <div className="text-sm font-medium text-white/80 uppercase tracking-wider">Limited Time</div>
+              </div>
+
+              <div>
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight mb-2 bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+                  FLASH SALE LIVE!
+                </h2>
+                <p className="text-lg sm:text-xl font-semibold mb-4 text-white/90">
+                  Up to 50% OFF on Fresh Products
+                </p>
+
+                {/* Enhanced Countdown */}
+                <div className="bg-black/20 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+                  <div className="flex items-center justify-center gap-4 text-center">
+                    <div className="flex flex-col items-center">
+                      <div className="text-2xl font-bold text-yellow-300">{Math.floor(timeLeft / (1000 * 60 * 60))}</div>
+                      <div className="text-xs text-white/70 uppercase tracking-wide">Hours</div>
+                    </div>
+                    <div className="text-yellow-300 text-xl font-bold">:</div>
+                    <div className="flex flex-col items-center">
+                      <div className="text-2xl font-bold text-yellow-300">{Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60))}</div>
+                      <div className="text-xs text-white/70 uppercase tracking-wide">Minutes</div>
+                    </div>
+                    <div className="text-yellow-300 text-xl font-bold">:</div>
+                    <div className="flex flex-col items-center">
+                      <div className="text-2xl font-bold text-yellow-300">{Math.floor((timeLeft % (1000 * 60)) / 1000)}</div>
+                      <div className="text-xs text-white/70 uppercase tracking-wide">Seconds</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <Link to="/deals" className="bg-white text-red-700 font-extrabold px-8 py-4 rounded-full shadow-2xl hover:bg-gray-100 hover:shadow-3xl transition-all duration-300 transform hover:scale-110 select-none">
-              Shop Now
-            </Link>
+
+            <div className="flex flex-col items-center gap-4">
+              <Link to="/deals" className="group bg-gradient-to-r from-yellow-400 to-orange-500 text-red-900 font-black px-10 py-5 rounded-2xl shadow-2xl hover:shadow-yellow-500/25 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 border-2 border-white/20">
+                <span className="text-lg">SHOP NOW</span>
+                <div className="text-sm opacity-80 group-hover:opacity-100 transition-opacity">Don't Miss Out!</div>
+              </Link>
+
+              <div className="flex items-center gap-2 text-sm text-white/80">
+                <span>🚚</span>
+                <span>Free Delivery on Orders Over 2000 RWF</span>
+              </div>
+            </div>
           </div>
         </div>
-        {/* Categories Section */}
-        <section className="py-16">
-          <div className="container mx-auto px-4 sm:px-6">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">
-                Shop by Category
-              </h2>
-              <p className="text-lg sm:text-xl lg:text-2xl text-gray-700 max-w-4xl mx-auto leading-relaxed">
-                Explore our wide range of fresh categories, from farm-fresh produce to pantry essentials.
-              </p>
-            </div>
 
-            <Carousel
-              opts={{
-                align: "start",
-                slidesToScroll: 1,
-              }}
-              className="w-full"
-            >
-              <CarouselContent className="-ml-3">
-                {categoryFeatures.map((category) => (
-                  <CarouselItem key={category.slug} className="pl-3 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5">
-                    <Link to={`/category/${category.slug}`} className="group block">
-                      <div className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1">
-                        <div className="aspect-square rounded-xl overflow-hidden mb-3">
-                          <img
-                            src={category.image}
-                            alt={category.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                        </div>
-                        <h3 className="font-semibold text-center text-sm sm:text-base">{category.title}</h3>
-                        <p className="text-xs sm:text-sm text-muted-foreground text-center mt-1">{category.description}</p>
-                      </div>
-                    </Link>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="left-2" />
-              <CarouselNext className="right-2" />
-            </Carousel>
-          </div>
-        </section>
 
         <FeaturedProducts />
+
+
+
         <WhyChooseUs />
         <PromotionalCards />
         <CustomerTestimonials />

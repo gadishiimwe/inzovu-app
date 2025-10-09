@@ -57,7 +57,12 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({ children }) 
         image: item.image_url,
       }));
 
-      setCategories(mappedCategories);
+      // If no categories in database, use initial categories as fallback
+      if (mappedCategories.length === 0) {
+        setCategories(initialCategories);
+      } else {
+        setCategories(mappedCategories);
+      }
     } catch (error) {
       console.error('Error fetching categories:', error);
       // Fallback to initial categories

@@ -11,7 +11,7 @@ import {
 const testimonials = [
   {
     id: 1,
-    name: "Sarah Johnson",
+    name: "Sarah IZERE",
     image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
     rating: 5,
     text: "Impressed by the quality of fresh foods and the efficiency of delivery. The products are excellent.",

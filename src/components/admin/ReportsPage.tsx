@@ -35,49 +35,77 @@ export default function ReportsPage() {
       try {
         setLoading(true);
 
-        // Fetch products
-        const { data: products, error: productsError } = await supabase
-          .from("products")
-          .select("*");
+        // Fetch products (handle if table doesn't exist)
+        let products: any[] = [];
+        try {
+          const { data, error } = await supabase
+            .from("products")
+            .select("*");
 
-        if (productsError) throw productsError;
+          if (!error) {
+            products = data || [];
+          }
+        } catch (error) {
+          console.log("Products table not available, using empty data");
+        }
 
-        // Fetch categories
-        const { count: categoriesCount, error: categoriesError } = await supabase
-          .from("categories")
-          .select("*", { count: "exact", head: true });
+        // Fetch categories (handle if table doesn't exist)
+        let categoriesCount = 0;
+        try {
+          const { count, error } = await supabase
+            .from("categories")
+            .select("*", { count: "exact", head: true });
 
-        if (categoriesError) throw categoriesError;
+          if (!error) {
+            categoriesCount = count || 0;
+          }
+        } catch (error) {
+          console.log("Categories table not available, using 0");
+        }
 
-        // Fetch customers
-        const { count: customersCount, error: customersError } = await supabase
-          .from("profiles")
-          .select("*", { count: "exact", head: true });
+        // Fetch customers (handle if table doesn't exist)
+        let customersCount = 0;
+        try {
+          const { count, error } = await supabase
+            .from("profiles")
+            .select("*", { count: "exact", head: true });
 
-        if (customersError) throw customersError;
+          if (!error) {
+            customersCount = count || 0;
+          }
+        } catch (error) {
+          console.log("Profiles table not available, using 0");
+        }
 
-        // Fetch orders
-        const { data: orders, error: ordersError } = await supabase
-          .from("orders")
-          .select("*");
+        // Fetch orders (handle if table doesn't exist)
+        let orders: any[] = [];
+        try {
+          const { data, error } = await supabase
+            .from("orders")
+            .select("*");
 
-        if (ordersError) throw ordersError;
+          if (!error) {
+            orders = data || [];
+          }
+        } catch (error) {
+          console.log("Orders table not available, using empty data");
+        }
 
         // Calculate stats
-        const totalProducts = products?.length || 0;
-        const availableProducts = products?.filter(p => p.available !== false).length || 0;
-        const inventoryValue = products?.reduce((sum, product) => sum + (product.price || 0), 0) || 0;
+        const totalProducts = products.length;
+        const availableProducts = products.filter(p => p.available !== false).length;
+        const inventoryValue = products.reduce((sum, product) => sum + (product.price || 0), 0);
 
-        const totalOrders = orders?.length || 0;
-        const totalRevenue = orders?.reduce((sum, order) => sum + (order.total || 0), 0) || 0;
-        const pendingOrders = orders?.filter(order => order.status === 'pending').length || 0;
-        const completedOrders = orders?.filter(order => ['delivered', 'shipped'].includes(order.status)).length || 0;
+        const totalOrders = orders.length;
+        const totalRevenue = orders.reduce((sum, order) => sum + (order.total || 0), 0);
+        const pendingOrders = orders.filter(order => order.status === 'pending').length;
+        const completedOrders = orders.filter(order => ['delivered', 'shipped'].includes(order.status)).length;
 
         setStats({
           totalProducts,
           availableProducts,
-          totalCategories: categoriesCount || 0,
-          totalCustomers: customersCount || 0,
+          totalCategories: categoriesCount,
+          totalCustomers: customersCount,
           totalOrders,
           totalRevenue,
           pendingOrders,

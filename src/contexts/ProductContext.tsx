@@ -38,38 +38,53 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
   const fetchProducts = async () => {
     try {
       setLoading(true);
+
+      // Fetch from database
       const { data, error } = await supabase
         .from('products')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      console.log('Products fetch result:', { data, error });
 
-      // Map Supabase data to Product type
-      const mappedProducts: Product[] = (data || []).map(item => ({
-        id: item.id,
-        name: item.name,
-        price: item.price,
-        unit: item.unit || '',
-        categorySlug: item.category_slug,
-        image: item.image_url,
-        description: item.description || '',
-        available: item.available !== false,
-      }));
-
-      // If no products in database, use static data as fallback
-      if (mappedProducts.length === 0) {
+      if (error) {
+        console.error('Database error fetching products:', error);
+        toast({
+          title: "Error",
+          description: `Failed to load products: ${error.message}`,
+          variant: "destructive",
+        });
+        // Fall back to static data
         setProducts(staticProducts);
-      } else {
+      } else if (data && data.length > 0) {
+        // Map Supabase data to Product type
+        const mappedProducts = data.map((item: any) => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          unit: item.unit || '',
+          categorySlug: item.category_slug,
+          image: item.image_url,
+          description: item.description || '',
+          available: item.available !== false,
+          is_new: item.is_new || false,
+          is_featured: item.is_featured || false,
+          is_deal: item.is_deal || false,
+        }));
+        console.log('Using database products:', mappedProducts);
         setProducts(mappedProducts);
+      } else {
+        console.log('No products in database, using static products data');
+        setProducts(staticProducts);
       }
     } catch (error) {
       console.error('Error fetching products:', error);
       toast({
         title: "Error",
-        description: "Failed to load products",
+        description: "Failed to load products, using defaults",
         variant: "destructive",
       });
+      setProducts(staticProducts);
     } finally {
       setLoading(false);
     }
@@ -87,29 +102,30 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
           image_url: product.image,
           description: product.description || null,
           available: product.available !== false,
+          is_new: product.is_new || false,
+          is_featured: product.is_featured || false,
+          is_deal: product.is_deal || false,
         })
         .select()
         .single();
 
-      if (error) throw error;
+      console.log('Add product result:', { data, error });
 
-      // Add to local state
-      const newProduct: Product = {
-        id: data.id,
-        name: data.name,
-        price: data.price,
-        unit: data.unit || '',
-        categorySlug: data.category_slug,
-        image: data.image_url,
-        description: data.description || '',
-        available: data.available !== false,
-      };
-
-      setProducts(prev => [newProduct, ...prev]);
-      toast({
-        title: "Success",
-        description: "Product added successfully",
-      });
+      if (!error && data) {
+        // Refetch to get updated list including the new product
+        await fetchProducts();
+        toast({
+          title: "Success",
+          description: "Product added successfully",
+        });
+      } else {
+        console.error('Database error adding product:', error);
+        toast({
+          title: "Error",
+          description: `Failed to add product to database: ${error?.message || 'Unknown error'}`,
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       console.error('Error adding product:', error);
       toast({
@@ -117,7 +133,6 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
         description: "Failed to add product",
         variant: "destructive",
       });
-      throw error;
     }
   };
 
@@ -133,17 +148,29 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
           image_url: product.image,
           description: product.description || null,
           available: product.available !== false,
+          is_new: product.is_new || false,
+          is_featured: product.is_featured || false,
+          is_deal: product.is_deal || false,
         })
         .eq('id', product.id);
 
-      if (error) throw error;
+      console.log('Update product result:', { error });
 
-      // Update local state
-      setProducts(prev => prev.map(p => p.id === product.id ? product : p));
-      toast({
-        title: "Success",
-        description: "Product updated successfully",
-      });
+      if (!error) {
+        // Refetch to get updated list
+        await fetchProducts();
+        toast({
+          title: "Success",
+          description: "Product updated successfully",
+        });
+      } else {
+        console.error('Database error updating product:', error);
+        toast({
+          title: "Error",
+          description: `Failed to update product: ${error.message}`,
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       console.error('Error updating product:', error);
       toast({
@@ -151,7 +178,6 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
         description: "Failed to update product",
         variant: "destructive",
       });
-      throw error;
     }
   };
 
@@ -162,14 +188,23 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
         .delete()
         .eq('id', productId);
 
-      if (error) throw error;
+      console.log('Delete product result:', { error });
 
-      // Remove from local state
-      setProducts(prev => prev.filter(p => p.id !== productId));
-      toast({
-        title: "Success",
-        description: "Product deleted successfully",
-      });
+      if (!error) {
+        // Refetch to get updated list
+        await fetchProducts();
+        toast({
+          title: "Success",
+          description: "Product deleted successfully",
+        });
+      } else {
+        console.error('Database error deleting product:', error);
+        toast({
+          title: "Error",
+          description: `Failed to delete product: ${error.message}`,
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       console.error('Error deleting product:', error);
       toast({
@@ -177,7 +212,6 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
         description: "Failed to delete product",
         variant: "destructive",
       });
-      throw error;
     }
   };
 

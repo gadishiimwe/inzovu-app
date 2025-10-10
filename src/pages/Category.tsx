@@ -1,11 +1,12 @@
 import { useParams, Link } from "react-router-dom";
 import ProductCard from "@/components/product/ProductCard";
-import { categories } from "@/data/inzovu";
 import { useProducts } from "@/contexts/ProductContext";
+import { useCategories } from "@/contexts/CategoryContext";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
 
 export default function Category() {
   const { products } = useProducts();
+  const { categories } = useCategories();
   const { slug } = useParams();
   const category = categories.find((c) => c.slug === slug);
   const items = products.filter((p) => p.categorySlug === slug && p.available !== false);
@@ -36,11 +37,49 @@ export default function Category() {
             Quality you can taste in every bite.
           </p>
         </header>
-        {/* Responsive grid for all screen sizes */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 mt-10">
-          {items.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
+        <div className="flex gap-8 mt-10">
+          <aside className="w-64 hidden lg:block bg-white rounded-2xl shadow-xl border border-gray-100 p-6 h-fit sticky top-8">
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center shadow-md">
+                <span className="text-white text-lg">🏷️</span>
+              </div>
+              <h3 className="font-bold text-lg text-gray-800">Categories</h3>
+            </div>
+            <ul className="space-y-1">
+              {categories.map((c) => {
+                const isActive = c.slug === slug;
+                return (
+                  <li key={c.slug}>
+                    <Link
+                      to={`/category/${c.slug}`}
+                      className={`group relative flex items-center gap-3 py-3 px-4 rounded-lg transition-all duration-200 font-medium ${
+                        isActive
+                          ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md'
+                          : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600 hover:shadow-sm'
+                      }`}
+                    >
+                      <div className={`w-3 h-3 rounded-full transition-colors ${
+                        isActive ? 'bg-white' : 'bg-gray-300 group-hover:bg-blue-400'
+                      }`}></div>
+                      <span className="flex-1">{c.title}</span>
+                      {isActive && (
+                        <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                      )}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </aside>
+
+          {/* Responsive grid for all screen sizes */}
+          <section className="flex-1">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2">
+              {items.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          </section>
         </div>
       </div>
     </div>

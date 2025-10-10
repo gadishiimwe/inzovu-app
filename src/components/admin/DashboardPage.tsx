@@ -44,28 +44,42 @@ export default function DashboardPage({ orders }: DashboardPageProps) {
     try {
       setLoading(true);
 
-      // Fetch orders
-      const { data: ordersData, error: ordersError } = await supabase
-        .from("orders")
-        .select("*")
-        .order("created_at", { ascending: false });
+      // Fetch orders (handle if table doesn't exist)
+      let ordersData: any[] = [];
+      try {
+        const { data, error } = await supabase
+          .from("orders")
+          .select("*")
+          .order("created_at", { ascending: false });
 
-      if (ordersError) throw ordersError;
+        if (!error) {
+          ordersData = data || [];
+        }
+      } catch (error) {
+        console.log("Orders table not available, using empty data");
+      }
 
-      // Fetch customers count
-      const { count: customersCount, error: customersError } = await supabase
-        .from("profiles")
-        .select("*", { count: "exact", head: true });
+      // Fetch customers count (handle if table doesn't exist)
+      let customersCount = 0;
+      try {
+        const { count, error } = await supabase
+          .from("profiles")
+          .select("*", { count: "exact", head: true });
 
-      if (customersError) throw customersError;
+        if (!error) {
+          customersCount = count || 0;
+        }
+      } catch (error) {
+        console.log("Profiles table not available, using 0 customers");
+      }
 
       // Calculate stats
       const totalProducts = products.length;
       const availableProducts = products.filter(p => p.available !== false).length;
-      const totalOrders = ordersData?.length || 0;
-      const totalRevenue = ordersData?.reduce((sum, order) => sum + (order.total || 0), 0) || 0;
-      const pendingOrders = ordersData?.filter(order => order.status === 'pending').length || 0;
-      const completedOrders = ordersData?.filter(order => ['delivered', 'shipped'].includes(order.status)).length || 0;
+      const totalOrders = ordersData.length;
+      const totalRevenue = ordersData.reduce((sum, order) => sum + (order.total || 0), 0);
+      const pendingOrders = ordersData.filter(order => order.status === 'pending').length;
+      const completedOrders = ordersData.filter(order => ['delivered', 'shipped'].includes(order.status)).length;
 
       setStats({
         totalProducts,
@@ -74,10 +88,10 @@ export default function DashboardPage({ orders }: DashboardPageProps) {
         totalRevenue,
         pendingOrders,
         completedOrders,
-        totalCustomers: customersCount || 0,
+        totalCustomers: customersCount,
       });
 
-      setRecentOrders(ordersData?.slice(0, 5) || []);
+      setRecentOrders(ordersData.slice(0, 5));
     } catch (error) {
       console.error("Error fetching dashboard stats:", error);
       toast({

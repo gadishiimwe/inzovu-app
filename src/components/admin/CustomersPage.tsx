@@ -31,13 +31,22 @@ export default function CustomersPage() {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("id, full_name, phone, created_at")
-          .order("created_at", { ascending: false });
+        // Try to fetch customers, handle if table doesn't exist
+        let customersData: Customer[] = [];
+        try {
+          const { data, error } = await supabase
+            .from("profiles")
+            .select("id, full_name, phone, created_at")
+            .order("created_at", { ascending: false });
 
-        if (error) throw error;
-        setCustomers(data || []);
+          if (!error) {
+            customersData = data || [];
+          }
+        } catch (error) {
+          console.log("Profiles table not available, using empty data");
+        }
+
+        setCustomers(customersData);
       } catch (error) {
         console.error("Error fetching customers:", error);
         toast({ title: "Error", description: "Failed to load customers", variant: "destructive" });

@@ -13,6 +13,9 @@ export type Product = {
   image: string;
   description?: string;
   available?: boolean;
+  is_new?: boolean;
+  is_featured?: boolean;
+  is_deal?: boolean;
 };
 
 import catFruits from "@/assets/categories/fruits.jpg";
@@ -48,11 +51,11 @@ import pOliveOil from "@/assets/products/olive-oil.jpg";
 
 export const products: Product[] = [
   // Fruits
-  { id: "p1", name: "Bananas (Ripe)", price: 2000, unit: "/kg", categorySlug: "fruits", image: pBananas, description: "Sweet, ripe bananas perfect for snacking and smoothies." },
-  { id: "p2", name: "Avocado (Hass)", price: 1500, unit: "each", categorySlug: "fruits", image: pAvocado, description: "Creamy Hass avocado, great for salads and toast." },
-  { id: "p9", name: "Apples (Mixed)", price: 3000, unit: "/kg", categorySlug: "fruits", image: pApples, description: "Fresh crisp apples, red and green varieties." },
+  { id: "p1", name: "Bananas (Ripe)", price: 2000, unit: "/kg", categorySlug: "fruits", image: pBananas, description: "Sweet, ripe bananas perfect for snacking and smoothies.", is_new: true },
+  { id: "p2", name: "Avocado (Hass)", price: 1500, unit: "each", categorySlug: "fruits", image: pAvocado, description: "Creamy Hass avocado, great for salads and toast.", is_new: true },
+  { id: "p9", name: "Apples (Mixed)", price: 3000, unit: "/kg", categorySlug: "fruits", image: pApples, description: "Fresh crisp apples, red and green varieties.", is_deal: true },
   { id: "p10", name: "Oranges (Sweet)", price: 2500, unit: "/kg", categorySlug: "fruits", image: pOranges, description: "Juicy sweet oranges, perfect for fresh juice." },
-  { id: "p11", name: "Mangoes (Tropical)", price: 4000, unit: "/kg", categorySlug: "fruits", image: pMangoes, description: "Sweet tropical mangoes, rich in vitamins." },
+  { id: "p11", name: "Mangoes (Tropical)", price: 4000, unit: "/kg", categorySlug: "fruits", image: pMangoes, description: "Sweet tropical mangoes, rich in vitamins.", is_new: true },
   { id: "p12", name: "Pineapple (Fresh)", price: 5000, unit: "each", categorySlug: "fruits", image: pPineapple, description: "Fresh golden pineapple, sweet and tangy." },
   { id: "p13", name: "Strawberries (Premium)", price: 6000, unit: "/kg", categorySlug: "fruits", image: pStrawberries, description: "Premium fresh strawberries, perfect for desserts." },
   { id: "p14", name: "Grapes (Seedless)", price: 5500, unit: "/kg", categorySlug: "fruits", image: pGrapes, description: "Sweet seedless grapes, purple and green varieties." },
@@ -78,8 +81,8 @@ export const products: Product[] = [
   { id: "p31", name: "Garlic (Fresh)", price: 4000, unit: "/kg", categorySlug: "vegetables", image: pSpinach, description: "Fresh garlic bulbs, aromatic and flavorful." },
 
   // Dairy & Eggs
-  { id: "p4", name: "Milk (1L)", price: 1000, unit: "1L", categorySlug: "dairy", image: pMilk, description: "Fresh whole milk from local farms." },
-  { id: "p6", name: "Free-range Eggs (12)", price: 2500, unit: "tray", categorySlug: "dairy", image: pEggs, description: "Dozen free-range eggs, rich and flavorful." },
+  { id: "p4", name: "Milk (1L)", price: 1000, unit: "1L", categorySlug: "dairy", image: pMilk, description: "Fresh whole milk from local farms.", is_featured: true },
+  { id: "p6", name: "Free-range Eggs (12)", price: 2500, unit: "tray", categorySlug: "dairy", image: pEggs, description: "Dozen free-range eggs, rich and flavorful.", is_deal: true },
   { id: "p32", name: "Cheddar Cheese (Block)", price: 6000, unit: "500g", categorySlug: "dairy", image: pMilk, description: "Sharp cheddar cheese, perfect for sandwiches." },
   { id: "p33", name: "Greek Yogurt (Plain)", price: 3000, unit: "500g", categorySlug: "dairy", image: pMilk, description: "Thick Greek yogurt, high in protein." },
   { id: "p34", name: "Butter (Unsalted)", price: 4000, unit: "250g", categorySlug: "dairy", image: pMilk, description: "Unsalted butter, creamy and fresh." },

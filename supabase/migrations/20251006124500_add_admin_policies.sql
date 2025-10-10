@@ -5,14 +5,8 @@ DROP POLICY IF EXISTS "Admins can manage all products" ON public.products;
 CREATE POLICY "Admins can manage all products"
 ON public.products
 FOR ALL
-USING (
-  EXISTS (
-    SELECT 1 FROM public.user_roles
-    WHERE user_id = auth.uid()
-    AND role = 'admin'
-  )
-  OR (auth.jwt() ->> 'email') = 'admin@gmail.com'
-);
+USING ((auth.jwt() ->> 'email') = 'admin@gmail.com')
+WITH CHECK ((auth.jwt() ->> 'email') = 'admin@gmail.com');
 
 -- Categories table admin policies
 DROP POLICY IF EXISTS "Admins can manage all categories" ON public.categories;
@@ -26,7 +20,22 @@ USING (
     AND role = 'admin'
   )
   OR (auth.jwt() ->> 'email') = 'admin@gmail.com'
+)
+WITH CHECK (
+  EXISTS (
+    SELECT 1 FROM public.user_roles
+    WHERE user_id = auth.uid()
+    AND role = 'admin'
+  )
+  OR (auth.jwt() ->> 'email') = 'admin@gmail.com'
 );
+
+-- Allow anyone to view categories
+DROP POLICY IF EXISTS "Anyone can view categories" ON public.categories;
+CREATE POLICY "Anyone can view categories"
+ON public.categories
+FOR SELECT
+USING (true);
 
 -- Orders table admin policies
 DROP POLICY IF EXISTS "Admins can manage all orders" ON public.orders;
@@ -34,6 +43,14 @@ CREATE POLICY "Admins can manage all orders"
 ON public.orders
 FOR ALL
 USING (
+  EXISTS (
+    SELECT 1 FROM public.user_roles
+    WHERE user_id = auth.uid()
+    AND role = 'admin'
+  )
+  OR (auth.jwt() ->> 'email') = 'admin@gmail.com'
+)
+WITH CHECK (
   EXISTS (
     SELECT 1 FROM public.user_roles
     WHERE user_id = auth.uid()

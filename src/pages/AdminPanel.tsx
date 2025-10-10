@@ -105,12 +105,8 @@ export default function AdminPanel() {
 
       const isDevAdmin = (user.email || "").toLowerCase() === "admin@gmail.com";
       if (!roleData && !isDevAdmin) {
-      toast({
-        title: "Access Denied",
-        description: "You don't have admin privileges.",
-        variant: "destructive"
-      });
-        navigate("/");
+        setIsAdmin(false);
+        setLoading(false);
         return;
       }
 
@@ -249,7 +245,7 @@ export default function AdminPanel() {
 
     deleteProduct(id);
 
-    toast.toast({
+    toast({
       title: "Success",
       description: "Product deleted successfully"
     });
@@ -327,6 +323,17 @@ export default function AdminPanel() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (isAdmin === false) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
+          <p>You don't have admin privileges.</p>
+        </div>
       </div>
     );
   }

@@ -18,7 +18,6 @@ import Contact from "./pages/Contact";
 import FAQ from "./pages/FAQ";
 import Admin from "./pages/Admin";
 import Auth from "./pages/Auth";
-import AdminPanel from "./pages/AdminPanel";
 import AdminDashboard from "./pages/AdminDashboard";
 import NewIn from "./pages/NewIn";
 import GoodStuff from "./pages/GoodStuff";

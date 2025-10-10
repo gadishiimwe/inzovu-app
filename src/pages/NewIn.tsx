@@ -1,10 +1,14 @@
 import { useProducts } from "@/contexts/ProductContext";
+import { useCategories } from "@/contexts/CategoryContext";
 import ProductCard from "@/components/product/ProductCard";
+import { Link } from "react-router-dom";
+import CategorySidebar from "@/components/common/CategorySidebar";
+import { Link } from "react-router-dom";
 
 export default function NewIn() {
   const { products } = useProducts();
-  // Show latest 12 products based on created date
-  const newProducts = products.slice(0, 12);
+  // Show all available products
+  const newProducts = products.filter(p => p.available !== false).slice(0, 12);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
@@ -22,10 +26,17 @@ export default function NewIn() {
           </p>
         </header>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2">
-          {newProducts.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
+        <div className="flex gap-8">
+          <div className="hidden lg:block">
+            <CategorySidebar />
+          </div>
+          <div className="flex-1">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2">
+              {newProducts.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>

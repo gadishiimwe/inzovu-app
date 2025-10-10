@@ -76,7 +76,7 @@ const Index = () => {
       <Hero />
       <main className="flex-1 bg-gradient-to-br from-yellow-50 to-orange-50">
         {/* Flash Sale Banner */}
-        <div className="bg-gradient-to-r from-red-600 via-red-700 to-red-800 text-white py-12 px-6 sm:px-12 rounded-b-3xl shadow-2xl mb-10 max-w-7xl mx-auto relative overflow-hidden">
+        <div className="bg-gradient-to-r from-red-600 via-red-700 to-red-800 text-white py-6 px-4 sm:px-8 rounded-b-2xl shadow-xl mb-8 max-w-6xl mx-auto relative overflow-hidden">
           {/* Animated background pattern */}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_50%)] animate-pulse"></div>
@@ -84,39 +84,39 @@ const Index = () => {
           </div>
 
           {/* Floating elements */}
-          <div className="absolute top-4 right-8 text-4xl animate-bounce">🔥</div>
-          <div className="absolute bottom-4 left-8 text-3xl animate-pulse">⚡</div>
+          <div className="absolute top-2 right-4 text-2xl animate-bounce">🔥</div>
+          <div className="absolute bottom-2 left-4 text-xl animate-pulse">⚡</div>
 
-          <div className="relative flex flex-col lg:flex-row items-center justify-between gap-8">
-            <div className="flex flex-col lg:flex-row items-center gap-6 text-center lg:text-left">
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                <div className="text-4xl mb-2">⏰</div>
-                <div className="text-sm font-medium text-white/80 uppercase tracking-wider">Limited Time</div>
+          <div className="relative flex flex-col lg:flex-row items-center justify-between gap-4">
+            <div className="flex flex-col lg:flex-row items-center gap-4 text-center lg:text-left">
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                <div className="text-2xl mb-1">⏰</div>
+                <div className="text-xs font-medium text-white/80 uppercase tracking-wider">Limited Time</div>
               </div>
 
               <div>
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight mb-2 bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight mb-1 bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
                   FLASH SALE LIVE!
                 </h2>
-                <p className="text-lg sm:text-xl font-semibold mb-4 text-white/90">
+                <p className="text-base sm:text-lg font-semibold mb-3 text-white/90">
                   Up to 50% OFF on Fresh Products
                 </p>
 
                 {/* Enhanced Countdown */}
-                <div className="bg-black/20 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-                  <div className="flex items-center justify-center gap-4 text-center">
+                <div className="bg-black/20 backdrop-blur-sm rounded-lg p-3 border border-white/10">
+                  <div className="flex items-center justify-center gap-3 text-center">
                     <div className="flex flex-col items-center">
-                      <div className="text-2xl font-bold text-yellow-300">{Math.floor(timeLeft / (1000 * 60 * 60))}</div>
+                      <div className="text-lg font-bold text-yellow-300">{Math.floor(timeLeft / (1000 * 60 * 60))}</div>
                       <div className="text-xs text-white/70 uppercase tracking-wide">Hours</div>
                     </div>
-                    <div className="text-yellow-300 text-xl font-bold">:</div>
+                    <div className="text-yellow-300 text-lg font-bold">:</div>
                     <div className="flex flex-col items-center">
-                      <div className="text-2xl font-bold text-yellow-300">{Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60))}</div>
+                      <div className="text-lg font-bold text-yellow-300">{Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60))}</div>
                       <div className="text-xs text-white/70 uppercase tracking-wide">Minutes</div>
                     </div>
-                    <div className="text-yellow-300 text-xl font-bold">:</div>
+                    <div className="text-yellow-300 text-lg font-bold">:</div>
                     <div className="flex flex-col items-center">
-                      <div className="text-2xl font-bold text-yellow-300">{Math.floor((timeLeft % (1000 * 60)) / 1000)}</div>
+                      <div className="text-lg font-bold text-yellow-300">{Math.floor((timeLeft % (1000 * 60)) / 1000)}</div>
                       <div className="text-xs text-white/70 uppercase tracking-wide">Seconds</div>
                     </div>
                   </div>
@@ -124,13 +124,13 @@ const Index = () => {
               </div>
             </div>
 
-            <div className="flex flex-col items-center gap-4">
-              <Link to="/deals" className="group bg-gradient-to-r from-yellow-400 to-orange-500 text-red-900 font-black px-10 py-5 rounded-2xl shadow-2xl hover:shadow-yellow-500/25 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 border-2 border-white/20">
-                <span className="text-lg">SHOP NOW</span>
-                <div className="text-sm opacity-80 group-hover:opacity-100 transition-opacity">Don't Miss Out!</div>
+            <div className="flex flex-col items-center gap-3">
+              <Link to="/deals" className="group bg-gradient-to-r from-yellow-400 to-orange-500 text-red-900 font-black px-6 py-3 rounded-xl shadow-xl hover:shadow-yellow-500/25 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 border-2 border-white/20">
+                <span className="text-base">SHOP NOW</span>
+                <div className="text-xs opacity-80 group-hover:opacity-100 transition-opacity">Don't Miss Out!</div>
               </Link>
 
-              <div className="flex items-center gap-2 text-sm text-white/80">
+              <div className="flex items-center gap-2 text-xs text-white/80">
                 <span>🚚</span>
                 <span>Free Delivery on Orders Over 2000 RWF</span>
               </div>

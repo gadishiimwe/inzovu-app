@@ -43,35 +43,45 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({ children }) 
   const fetchCategories = async () => {
     try {
       setLoading(true);
+
+      // Fetch from database
       const { data, error } = await supabase
         .from('categories')
         .select('*')
         .order('title');
 
-      if (error) throw error;
+      console.log('Categories fetch result:', { data, error });
 
-      // Map Supabase data to Category type
-      const mappedCategories: Category[] = (data || []).map(item => ({
-        slug: item.slug,
-        title: item.title,
-        image: item.image_url,
-      }));
-
-      // If no categories in database, use initial categories as fallback
-      if (mappedCategories.length === 0) {
+      if (error) {
+        console.error('Database error fetching categories:', error);
+        toast({
+          title: "Error",
+          description: `Failed to load categories: ${error.message}`,
+          variant: "destructive",
+        });
+        // Fall back to initial data
         setCategories(initialCategories);
-      } else {
+      } else if (data && data.length > 0) {
+        // Map Supabase data to Category type
+        const mappedCategories = data.map(item => ({
+          slug: item.slug,
+          title: item.title,
+          image: item.image_url,
+        }));
+        console.log('Using database categories:', mappedCategories);
         setCategories(mappedCategories);
+      } else {
+        console.log('No categories in database, using initial categories data');
+        setCategories(initialCategories);
       }
     } catch (error) {
       console.error('Error fetching categories:', error);
-      // Fallback to initial categories
-      setCategories(initialCategories);
       toast({
         title: "Error",
         description: "Failed to load categories, using defaults",
         variant: "destructive",
       });
+      setCategories(initialCategories);
     } finally {
       setLoading(false);
     }
@@ -79,6 +89,41 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({ children }) 
 
   const addCategory = async (category: Category) => {
     try {
+      const { data: user } = await supabase.auth.getUser();
+      console.log('Current user:', user);
+      console.log('User email:', user.user?.email);
+
+      if (!user.user) {
+        toast({
+          title: "Error",
+          description: "Please log in as admin to add categories",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Check if user has admin role or is admin email
+      const isAdminEmail = user.user.email === 'admin@gmail.com';
+
+      if (!isAdminEmail) {
+        const { data: roleData, error: roleError } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', user.user.id)
+          .single();
+
+        console.log('User role check:', { roleData, roleError });
+
+        if (roleError || !roleData || roleData.role !== 'admin') {
+          toast({
+            title: "Error",
+            description: "Admin access required to add categories",
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+
       const { data, error } = await supabase
         .from('categories')
         .insert({
@@ -89,20 +134,23 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({ children }) 
         .select()
         .single();
 
-      if (error) throw error;
+      console.log('Add category result:', { data, error });
 
-      // Add to local state
-      const newCategory: Category = {
-        slug: data.slug,
-        title: data.title,
-        image: data.image_url,
-      };
-
-      setCategories(prev => [...prev, newCategory]);
-      toast({
-        title: "Success",
-        description: "Category added successfully",
-      });
+      if (!error && data) {
+        // Refetch to get updated list including the new category
+        await fetchCategories();
+        toast({
+          title: "Success",
+          description: "Category added successfully",
+        });
+      } else {
+        console.error('Database error adding category:', error);
+        toast({
+          title: "Error",
+          description: `Failed to add category to database: ${error?.message || 'Unknown error'}`,
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       console.error('Error adding category:', error);
       toast({
@@ -110,7 +158,6 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({ children }) 
         description: "Failed to add category",
         variant: "destructive",
       });
-      throw error;
     }
   };
 
@@ -124,14 +171,23 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({ children }) 
         })
         .eq('slug', category.slug);
 
-      if (error) throw error;
+      console.log('Update category result:', { error });
 
-      // Update local state
-      setCategories(prev => prev.map(c => c.slug === category.slug ? category : c));
-      toast({
-        title: "Success",
-        description: "Category updated successfully",
-      });
+      if (!error) {
+        // Refetch to get updated list
+        await fetchCategories();
+        toast({
+          title: "Success",
+          description: "Category updated successfully",
+        });
+      } else {
+        console.error('Database error updating category:', error);
+        toast({
+          title: "Error",
+          description: `Failed to update category: ${error.message}`,
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       console.error('Error updating category:', error);
       toast({
@@ -139,7 +195,6 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({ children }) 
         description: "Failed to update category",
         variant: "destructive",
       });
-      throw error;
     }
   };
 
@@ -150,14 +205,23 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({ children }) 
         .delete()
         .eq('slug', slug);
 
-      if (error) throw error;
+      console.log('Delete category result:', { error });
 
-      // Remove from local state
-      setCategories(prev => prev.filter(c => c.slug !== slug));
-      toast({
-        title: "Success",
-        description: "Category deleted successfully",
-      });
+      if (!error) {
+        // Refetch to get updated list
+        await fetchCategories();
+        toast({
+          title: "Success",
+          description: "Category deleted successfully",
+        });
+      } else {
+        console.error('Database error deleting category:', error);
+        toast({
+          title: "Error",
+          description: `Failed to delete category: ${error.message}`,
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       console.error('Error deleting category:', error);
       toast({
@@ -165,7 +229,6 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({ children }) 
         description: "Failed to delete category",
         variant: "destructive",
       });
-      throw error;
     }
   };
 

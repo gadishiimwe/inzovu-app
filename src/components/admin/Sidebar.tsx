@@ -1,5 +1,5 @@
 import React from "react";
-import { LayoutDashboard, Box, Tags, ShoppingCart, Users, BarChart2, Settings, LogOut, Crown } from "lucide-react";
+import { LayoutDashboard, Box, Tags, ShoppingCart, Users, BarChart2, Settings, LogOut, Crown, FileText } from "lucide-react";
 
 interface SidebarProps {
   selected: string;
@@ -8,7 +8,9 @@ interface SidebarProps {
 
 const navItems = [
   { key: "dashboard", label: "Dashboard", icon: <LayoutDashboard size={20} />, color: "from-blue-500 to-blue-600" },
+  { key: "products", label: "Products", icon: <Box size={20} />, color: "from-emerald-500 to-emerald-600" },
   { key: "categories", label: "Categories", icon: <Tags size={20} />, color: "from-purple-500 to-purple-600" },
+  { key: "pages", label: "Pages", icon: <FileText size={20} />, color: "from-teal-500 to-teal-600" },
   { key: "orders", label: "Orders", icon: <ShoppingCart size={20} />, color: "from-green-500 to-green-600" },
   { key: "customers", label: "Customers", icon: <Users size={20} />, color: "from-orange-500 to-orange-600" },
   { key: "reports", label: "Reports", icon: <BarChart2 size={20} />, color: "from-pink-500 to-pink-600" },

@@ -1,10 +1,12 @@
 import { useProducts } from "@/contexts/ProductContext";
 import ProductCard from "@/components/product/ProductCard";
+import CategorySidebar from "@/components/common/CategorySidebar";
+import { Link } from "react-router-dom";
 
 export default function GoodStuff() {
   const { products } = useProducts();
-  // Show featured/premium products (you can add a featured flag to products later)
-  const goodProducts = products.slice(0, 16);
+  // Show all available products
+  const goodProducts = products.filter(p => p.available !== false).slice(0, 16);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
@@ -22,10 +24,17 @@ export default function GoodStuff() {
           </p>
         </header>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2">
-          {goodProducts.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
+        <div className="flex gap-8">
+          <div className="hidden lg:block">
+            <CategorySidebar />
+          </div>
+          <div className="flex-1">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2">
+              {goodProducts.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
